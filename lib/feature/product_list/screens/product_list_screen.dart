@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:product_list_app/feature/product_list/services/models/product_details_model.dart';
 import 'package:product_list_app/feature/product_list/services/providers/product_list_provider.dart';
 
 class ProductListScreen extends ConsumerStatefulWidget {
@@ -69,168 +70,372 @@ class _ProductListScreenState extends ConsumerState<ProductListScreen> {
             ),
           ],
         ),
-        body: Container(
-          width: screenWidth,
-          height: screenHeight,
-          color: const Color.fromARGB(255, 237, 233, 233),
-          padding: EdgeInsets.all(30),
-          child: Column(
-            children: [
-              // show the banner
-              SizedBox(
-                width: screenWidth,
-                height: screenHeight * 0.228,
+        body: SingleChildScrollView(
+          scrollDirection: .vertical,
+          child: Container(
+            width: screenWidth,
+            height: screenHeight,
+            color: const Color.fromARGB(255, 237, 233, 233),
+            padding: EdgeInsets.only(left: 30, right: 30, bottom: 10, top: 10),
+            child: Column(
+              children: [
+                // show the banner
+                // SizedBox(
+                //   width: screenWidth,
+                //   height: screenHeight * 0.228,
 
-                child: Stack(
+                //   child: Stack(
+                //     children: [
+                //       Positioned(
+                //         child: Container(
+                //           width: screenWidth,
+                //           height: screenHeight * 0.2,
+
+                //           padding: EdgeInsets.all(30),
+                //           decoration: BoxDecoration(
+                //             color: Colors.blue,
+                //             borderRadius: BorderRadius.circular(20),
+                //           ),
+                //           child: Column(
+                //             children: [
+                //               Spacer(),
+                //               Text(
+                //                 "Hii, Shiv Baba",
+                //                 style: TextStyle(
+                //                   fontSize: 25,
+                //                   color: Colors.white,
+                //                 ),
+                //               ),
+                //               Spacer(),
+                //             ],
+                //           ),
+                //         ),
+                //       ),
+                //       Positioned(
+                //         bottom: 1,
+                //         child: Padding(
+                //           padding: EdgeInsets.only(left: 20, right: 20),
+                //           child: Container(
+                //             width: screenWidth * 0.8,
+                //             decoration: BoxDecoration(
+                //               color: Colors.white,
+                //               borderRadius: .circular(30),
+                //             ),
+                //             child: TextField(
+                //               autocorrect: true,
+                //               controller: searchProductController,
+                //               decoration: InputDecoration(
+                //                 label: Icon(Icons.search),
+                //                 hintText: "Search for product",
+                //                 hintStyle: TextStyle(color: Colors.black),
+                //                 border: OutlineInputBorder(
+                //                   borderRadius: .circular(30),
+                //                 ),
+                //               ),
+                //             ),
+                //           ),
+                //         ),
+                //       ),
+                //     ],
+                //   ),
+                // ),
+                SizedBox(height: 5),
+                // show the list of product
+                Column(
                   children: [
-                    Positioned(
-                      child: Container(
-                        width: screenWidth,
-                        height: screenHeight * 0.2,
-
-                        padding: EdgeInsets.all(30),
-                        decoration: BoxDecoration(
-                          color: Colors.blue,
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Column(
-                          children: [
-                            Spacer(),
-                            Text(
-                              "Hii, Shiv Baba",
-                              style: TextStyle(
-                                fontSize: 25,
-                                color: Colors.white,
-                              ),
-                            ),
-                            Spacer(),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      bottom: 1,
-                      child: Padding(
-                        padding: EdgeInsets.only(left: 20, right: 20),
-                        child: Container(
-                          width: screenWidth * 0.8,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: .circular(30),
-                          ),
-                          child: TextField(
-                            autocorrect: true,
-                            controller: searchProductController,
-                            decoration: InputDecoration(
-                              label: Icon(Icons.search),
-                              hintText: "Search for product",
-                              hintStyle: TextStyle(color: Colors.black),
-                              border: OutlineInputBorder(
-                                borderRadius: .circular(30),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              SizedBox(height: 10),
-              // show the list of product
-              Column(
-                children: [
-                  SizedBox(
-                    height: 40,
-                    child: ListView.builder(
-                      physics: BouncingScrollPhysics(),
-                      scrollDirection: .horizontal,
-                      itemCount: _categories.length,
-                      itemBuilder: (context, index) {
-                        final category = _categories[index];
-                        bool isSelected = category == _selectedQuery;
-                        return Row(
-                          children: [
-                            InkWell(
-                              onTap: () {
-                                setState(() {
-                                  _selectedQuery = category;
-                                });
-                              },
-                              child: Container(
-                                // width: 100,
-                                padding: EdgeInsets.all(10),
-                                decoration: BoxDecoration(
-                                  borderRadius: .circular(20),
-                                  color: isSelected
-                                      ? Colors.blue
-                                      : Colors.white,
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    category,
-                                    style: TextStyle(
-                                      color: isSelected
-                                          ? Colors.white
-                                          : Colors.black,
+                    SizedBox(
+                      height: 40,
+                      child: ListView.builder(
+                        physics: BouncingScrollPhysics(),
+                        scrollDirection: .horizontal,
+                        itemCount: _categories.length,
+                        itemBuilder: (context, index) {
+                          final category = _categories[index];
+                          bool isSelected = category == _selectedQuery;
+                          return Row(
+                            children: [
+                              InkWell(
+                                onTap: () {
+                                  setState(() {
+                                    _selectedQuery = category;
+                                  });
+                                },
+                                child: Container(
+                                  // width: 100,
+                                  padding: EdgeInsets.all(10),
+                                  decoration: BoxDecoration(
+                                    borderRadius: .circular(20),
+                                    color: isSelected
+                                        ? Colors.blue
+                                        : Colors.white,
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      category,
+                                      style: TextStyle(
+                                        color: isSelected
+                                            ? Colors.white
+                                            : Colors.black,
+                                      ),
                                     ),
                                   ),
                                 ),
                               ),
-                            ),
-                            SizedBox(width: 10),
-                          ],
-                        );
-                      },
+                              SizedBox(width: 10),
+                            ],
+                          );
+                        },
+                      ),
                     ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 50),
-              Expanded(
-                child: productAsync.when(
-                  data: (productList) {
-                    return ListView.builder(
-                      itemCount: productList.limit,
-                      itemBuilder: (context, index) {
-                        final product = productList.products[index];
-                        return Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.grey.shade300,
-                              borderRadius: .circular(20),
-                            ),
-                            padding: .all(20),
-                            child: Column(
-                              crossAxisAlignment: .start,
-                              children: [
-                                Container(
-                                  height: 200,
-                                  width: 200,
-                                  child: Center(
-                                    child: Image.network(product.images.first),
-                                  ),
-                                ),
-                                Text(product.title),
-                                Text(product.description),
-                                Text(product.category),
-                              ],
-                            ),
-                          ),
-                        );
-                      },
-                    );
-                  },
-                  error: (e, s) => Text("Error :$e"),
-                  loading: () => Center(child: CircularProgressIndicator()),
+                  ],
                 ),
-              ),
-            ],
+                SizedBox(height: 10),
+                Expanded(
+                  child: productAsync.when(
+                    data: (productList) {
+                      return GridView.builder(
+                        // Added padding to the entire list so it breathes nicely against the screen edges
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 8,
+                        ),
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          childAspectRatio: 0.7,
+                        ),
+                        itemCount: productList.products.length,
+                        itemBuilder: (context, index) {
+                          final product = productList.products[index];
+
+                          return productCard(product);
+                        },
+                      );
+                    },
+                    error: (e, s) => Center(child: Text("Error: $e")),
+                    loading: () =>
+                        const Center(child: CircularProgressIndicator()),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
+}
+
+Widget productCard(Product product) {
+  return Card(
+    elevation: 0,
+    color: Colors.white,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(24),
+      side: BorderSide(color: Colors.grey.shade200),
+    ),
+    child: InkWell(
+      borderRadius: BorderRadius.circular(24),
+      onTap: () {},
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          /// IMAGE
+          Stack(
+            children: [
+              Hero(
+                tag: product.id,
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(24),
+                  ),
+                  child: AspectRatio(
+                    aspectRatio: 2,
+                    child: Image.network(
+                      product.thumbnail,
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                ),
+              ),
+
+              Positioned(
+                left: 12,
+                top: 12,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 5,
+                    vertical: 3,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.red,
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  child: Text(
+                    "-${product.discountPercentage.toStringAsFixed(0)}%",
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 12,
+                    ),
+                  ),
+                ),
+              ),
+
+              Positioned(
+                right: 12,
+                top: 12,
+                child: CircleAvatar(
+                  radius: 18,
+                  backgroundColor: Colors.white,
+                  child: Icon(Icons.favorite_border, size: 20),
+                ),
+              ),
+            ],
+          ),
+
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  product.title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                // const SizedBox(height: 5),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        product.brand ?? product.category,
+                        style: TextStyle(
+                          color: Colors.grey.shade600,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ),
+
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 4,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.amber.shade100,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Row(
+                        children: [
+                          const Icon(
+                            Icons.star,
+                            size: 14,
+                            color: Colors.orange,
+                          ),
+                          const SizedBox(width: 3),
+                          Text(product.rating.toStringAsFixed(1)),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+
+                const SizedBox(height: 8),
+
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 3,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.blue.shade50,
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  child: Text(
+                    product.category,
+                    style: TextStyle(
+                      color: Colors.blue.shade700,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 8),
+
+                Row(
+                  children: [
+                    Text(
+                      "\$${product.price}",
+                      style: const TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+
+                    const SizedBox(width: 8),
+
+                    Text(
+                      "\$${(product.price / (1 - product.discountPercentage / 100)).toStringAsFixed(2)}",
+                      style: TextStyle(
+                        decoration: TextDecoration.lineThrough,
+                        color: Colors.grey.shade500,
+                      ),
+                    ),
+                  ],
+                ),
+
+                const SizedBox(height: 12),
+
+                Row(
+                  children: [
+                    Icon(
+                      Icons.local_shipping_outlined,
+                      size: 18,
+                      color: Colors.green.shade600,
+                    ),
+
+                    const SizedBox(width: 4),
+
+                    Text(
+                      "Free Delivery",
+                      style: TextStyle(color: Colors.green.shade700),
+                    ),
+
+                    const Spacer(),
+
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 5,
+                      ),
+                      decoration: BoxDecoration(
+                        color: product.stock > 10
+                            ? Colors.green.shade100
+                            : Colors.orange.shade100,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Text(
+                        product.stock > 10 ? "In Stock" : "Few Left",
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          color: product.stock > 10
+                              ? Colors.green.shade700
+                              : Colors.orange.shade700,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
 }
