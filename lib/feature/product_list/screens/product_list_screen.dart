@@ -19,19 +19,6 @@ class _ProductListScreenState extends ConsumerState<ProductListScreen> {
 
   final ScrollController _scrollController = ScrollController();
 
-  // sample data
-  final List<String> _categories = [
-    'All',
-    'Electronics',
-    'Clothing',
-    'Home & Kitchen',
-    'Books',
-    'Beauty',
-    'Sports',
-    'Toys',
-    'Automotive',
-    'Groceries',
-  ];
   String _selectedQuery = "All";
 
   @override
@@ -53,6 +40,8 @@ class _ProductListScreenState extends ConsumerState<ProductListScreen> {
     final screenWidth = MediaQuery.sizeOf(context).width;
 
     final productAsync = ref.watch(productProvider);
+    final notifier = ref.read(productProvider.notifier);
+    final categories = notifier.categories;
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -109,10 +98,10 @@ class _ProductListScreenState extends ConsumerState<ProductListScreen> {
                     child: ListView.builder(
                       physics: BouncingScrollPhysics(),
                       scrollDirection: .horizontal,
-                      itemCount: _categories.length,
+                      itemCount: categories.length,
 
                       itemBuilder: (context, index) {
-                        final category = _categories[index];
+                        final category = categories[index];
                         bool isSelected = category == _selectedQuery;
                         return Row(
                           children: [
@@ -121,6 +110,9 @@ class _ProductListScreenState extends ConsumerState<ProductListScreen> {
                                 setState(() {
                                   _selectedQuery = category;
                                 });
+                                ref
+                                    .read(productProvider.notifier)
+                                    .changeCategory(category);
                               },
                               child: Container(
                                 // width: 100,
