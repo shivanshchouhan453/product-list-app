@@ -8,6 +8,9 @@ final productListRepository = Provider((ref) {
 });
 
 // future provider
-final fetchAllProductDetails = FutureProvider<ProductResponse>(
-  (ref) => ref.read(productListRepository).fetchAllProductDetails(),
-);
+final fetchAllProductDetails =
+    FutureProvider.family<ProductResponse, ({int limit, int skip})>(
+      (ref, arg) => ref
+          .read(productListRepository)
+          .fetchAllProductDetails(arg.limit, arg.skip),
+    );

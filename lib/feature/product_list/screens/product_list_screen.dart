@@ -37,7 +37,9 @@ class _ProductListScreenState extends ConsumerState<ProductListScreen> {
     final screenHeight = MediaQuery.sizeOf(context).height;
     final screenWidth = MediaQuery.sizeOf(context).width;
 
-    final productAsync = ref.watch(fetchAllProductDetails);
+    final productAsync = ref.watch(
+      fetchAllProductDetails((limit: 10, skip: 10)),
+    );
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -97,6 +99,7 @@ class _ProductListScreenState extends ConsumerState<ProductListScreen> {
                         physics: BouncingScrollPhysics(),
                         scrollDirection: .horizontal,
                         itemCount: _categories.length,
+
                         itemBuilder: (context, index) {
                           final category = _categories[index];
                           bool isSelected = category == _selectedQuery;
