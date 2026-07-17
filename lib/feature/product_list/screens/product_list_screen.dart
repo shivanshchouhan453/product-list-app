@@ -45,13 +45,17 @@ class _ProductListScreenState extends ConsumerState<ProductListScreen> {
           title: Row(
             children: [
               // circle
-              CircleAvatar(radius: 22, backgroundColor: Colors.blue.shade500),
+              CircleAvatar(
+                radius: 22,
+                backgroundColor: const Color.fromARGB(255, 210, 224, 235),
+                child: Icon(Icons.person),
+              ),
               SizedBox(width: 12),
               // greeting + name
               Column(
                 crossAxisAlignment: .start,
                 children: [
-                  Text("GOOD MORNING", style: TextStyle(fontSize: 15)),
+                  Text("Hello Buddy,", style: TextStyle(fontSize: 15)),
                   Text(
                     "Shiv Baba!!",
                     style: TextStyle(
@@ -66,8 +70,11 @@ class _ProductListScreenState extends ConsumerState<ProductListScreen> {
           ),
           actions: [
             Padding(
-              padding: const EdgeInsets.only(right: 8.0),
-              child: Icon(Icons.notifications, color: Colors.blue),
+              padding: const EdgeInsets.only(right: 15.0),
+              child: Icon(
+                Icons.notifications,
+                color: const Color.fromARGB(255, 114, 127, 138),
+              ),
             ),
           ],
         ),
@@ -137,12 +144,12 @@ class _ProductListScreenState extends ConsumerState<ProductListScreen> {
                       return GridView.builder(
                         // Added padding to the entire list so it breathes nicely against the screen edges
                         padding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 8,
+                          horizontal: 3,
+                          vertical: 5,
                         ),
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2,
-                          childAspectRatio: 0.6,
+                          childAspectRatio: 0.66,
                         ),
                         itemCount: productList.products.length,
                         itemBuilder: (context, index) {
@@ -157,6 +164,7 @@ class _ProductListScreenState extends ConsumerState<ProductListScreen> {
                         const Center(child: CircularProgressIndicator()),
                   ),
                 ),
+                SizedBox(height: screenHeight * 0.1),
               ],
             ),
           ),
@@ -242,7 +250,12 @@ Widget productCard(Product product, BuildContext context) {
           ),
 
           Padding(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.only(
+              top: 16,
+              left: 10,
+              right: 10,
+              bottom: 16,
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -282,11 +295,14 @@ Widget productCard(Product product, BuildContext context) {
                         children: [
                           const Icon(
                             Icons.star,
-                            size: 14,
+                            size: 12,
                             color: Colors.orange,
                           ),
                           const SizedBox(width: 3),
-                          Text(product.rating.toStringAsFixed(1)),
+                          Text(
+                            product.rating.toStringAsFixed(1),
+                            style: TextStyle(fontSize: 12, fontWeight: .w600),
+                          ),
                         ],
                       ),
                     ),
@@ -309,6 +325,7 @@ Widget productCard(Product product, BuildContext context) {
                     style: TextStyle(
                       color: Colors.blue.shade700,
                       fontWeight: FontWeight.w600,
+                      fontSize: 14,
                     ),
                   ),
                 ),
@@ -320,7 +337,7 @@ Widget productCard(Product product, BuildContext context) {
                     Text(
                       "\$${product.price}",
                       style: const TextStyle(
-                        fontSize: 22,
+                        fontSize: 18,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -332,49 +349,33 @@ Widget productCard(Product product, BuildContext context) {
                       style: TextStyle(
                         decoration: TextDecoration.lineThrough,
                         color: Colors.grey.shade500,
+                        fontSize: 12,
                       ),
                     ),
                   ],
                 ),
 
                 const SizedBox(height: 12),
-
-                Row(
-                  children: [
-                    // Icon(
-                    //   Icons.local_shipping_outlined,
-                    //   size: 18,
-                    //   color: Colors.green.shade600,
-                    // ),
-
-                    // const SizedBox(width: 4),
-                    // Text(
-                    //   product.toString(),
-                    //   style: TextStyle(color: Colors.green.shade700),
-                    // ),
-                    const Spacer(),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 5,
-                      ),
-                      decoration: BoxDecoration(
-                        color: product.stock > 10
-                            ? Colors.green.shade100
-                            : Colors.orange.shade100,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Text(
-                        product.stock > 10 ? "In Stock" : "Few Left",
-                        style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          color: product.stock > 10
-                              ? Colors.green.shade700
-                              : Colors.orange.shade700,
-                        ),
-                      ),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 5,
+                  ),
+                  decoration: BoxDecoration(
+                    color: product.stock > 10
+                        ? Colors.green.shade100
+                        : Colors.orange.shade100,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Text(
+                    product.stock > 10 ? "In Stock" : "Few Left",
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      color: product.stock > 10
+                          ? Colors.green.shade700
+                          : Colors.orange.shade700,
                     ),
-                  ],
+                  ),
                 ),
               ],
             ),
