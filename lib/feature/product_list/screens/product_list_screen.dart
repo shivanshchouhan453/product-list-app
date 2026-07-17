@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:product_list_app/feature/product_list/screens/product_details_screen.dart';
 import 'package:product_list_app/feature/product_list/services/models/product_details_model.dart';
 import 'package:product_list_app/feature/product_list/services/providers/product_list_provider.dart';
 
@@ -76,69 +77,9 @@ class _ProductListScreenState extends ConsumerState<ProductListScreen> {
             width: screenWidth,
             height: screenHeight,
             color: const Color.fromARGB(255, 237, 233, 233),
-            padding: EdgeInsets.only(left: 30, right: 30, bottom: 10, top: 10),
+            padding: EdgeInsets.only(left: 5, right: 5, bottom: 10, top: 10),
             child: Column(
               children: [
-                // show the banner
-                // SizedBox(
-                //   width: screenWidth,
-                //   height: screenHeight * 0.228,
-
-                //   child: Stack(
-                //     children: [
-                //       Positioned(
-                //         child: Container(
-                //           width: screenWidth,
-                //           height: screenHeight * 0.2,
-
-                //           padding: EdgeInsets.all(30),
-                //           decoration: BoxDecoration(
-                //             color: Colors.blue,
-                //             borderRadius: BorderRadius.circular(20),
-                //           ),
-                //           child: Column(
-                //             children: [
-                //               Spacer(),
-                //               Text(
-                //                 "Hii, Shiv Baba",
-                //                 style: TextStyle(
-                //                   fontSize: 25,
-                //                   color: Colors.white,
-                //                 ),
-                //               ),
-                //               Spacer(),
-                //             ],
-                //           ),
-                //         ),
-                //       ),
-                //       Positioned(
-                //         bottom: 1,
-                //         child: Padding(
-                //           padding: EdgeInsets.only(left: 20, right: 20),
-                //           child: Container(
-                //             width: screenWidth * 0.8,
-                //             decoration: BoxDecoration(
-                //               color: Colors.white,
-                //               borderRadius: .circular(30),
-                //             ),
-                //             child: TextField(
-                //               autocorrect: true,
-                //               controller: searchProductController,
-                //               decoration: InputDecoration(
-                //                 label: Icon(Icons.search),
-                //                 hintText: "Search for product",
-                //                 hintStyle: TextStyle(color: Colors.black),
-                //                 border: OutlineInputBorder(
-                //                   borderRadius: .circular(30),
-                //                 ),
-                //               ),
-                //             ),
-                //           ),
-                //         ),
-                //       ),
-                //     ],
-                //   ),
-                // ),
                 SizedBox(height: 5),
                 // show the list of product
                 Column(
@@ -201,13 +142,13 @@ class _ProductListScreenState extends ConsumerState<ProductListScreen> {
                         ),
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2,
-                          childAspectRatio: 0.7,
+                          childAspectRatio: 0.6,
                         ),
                         itemCount: productList.products.length,
                         itemBuilder: (context, index) {
                           final product = productList.products[index];
 
-                          return productCard(product);
+                          return productCard(product, context);
                         },
                       );
                     },
@@ -225,7 +166,7 @@ class _ProductListScreenState extends ConsumerState<ProductListScreen> {
   }
 }
 
-Widget productCard(Product product) {
+Widget productCard(Product product, BuildContext context) {
   return Card(
     elevation: 0,
     color: Colors.white,
@@ -235,7 +176,14 @@ Widget productCard(Product product) {
     ),
     child: InkWell(
       borderRadius: BorderRadius.circular(24),
-      onTap: () {},
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ProductDetailsScreen(product: product),
+          ),
+        );
+      },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -393,21 +341,18 @@ Widget productCard(Product product) {
 
                 Row(
                   children: [
-                    Icon(
-                      Icons.local_shipping_outlined,
-                      size: 18,
-                      color: Colors.green.shade600,
-                    ),
+                    // Icon(
+                    //   Icons.local_shipping_outlined,
+                    //   size: 18,
+                    //   color: Colors.green.shade600,
+                    // ),
 
-                    const SizedBox(width: 4),
-
-                    Text(
-                      "Free Delivery",
-                      style: TextStyle(color: Colors.green.shade700),
-                    ),
-
+                    // const SizedBox(width: 4),
+                    // Text(
+                    //   product.toString(),
+                    //   style: TextStyle(color: Colors.green.shade700),
+                    // ),
                     const Spacer(),
-
                     Container(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 10,
