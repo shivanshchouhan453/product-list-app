@@ -13,9 +13,7 @@ class ProductListScreen extends ConsumerStatefulWidget {
 }
 
 class _ProductListScreenState extends ConsumerState<ProductListScreen> {
-  final TextEditingController searchProductController = TextEditingController(
-    text: "Search the Product",
-  );
+  final TextEditingController searchProductController = TextEditingController();
 
   final ScrollController _scrollController = ScrollController();
 
@@ -52,18 +50,18 @@ class _ProductListScreenState extends ConsumerState<ProductListScreen> {
               CircleAvatar(
                 radius: 22,
                 backgroundColor: const Color.fromARGB(255, 210, 224, 235),
-                child: Icon(Icons.person),
+                child: Icon(Icons.person, size: 35),
               ),
               SizedBox(width: 12),
               // greeting + name
               Column(
                 crossAxisAlignment: .start,
                 children: [
-                  Text("Hello Buddy,", style: TextStyle(fontSize: 15)),
+                  // Text("Hello Buddy,", style: TextStyle(fontSize: 15)),
                   Text(
-                    "Shiv Baba!!",
+                    "Hello User!",
                     style: TextStyle(
-                      fontSize: 20,
+                      fontSize: 18,
                       fontWeight: .w600,
                       color: const Color.fromARGB(255, 13, 79, 193),
                     ),
@@ -90,6 +88,31 @@ class _ProductListScreenState extends ConsumerState<ProductListScreen> {
           child: Column(
             children: [
               SizedBox(height: 5),
+
+              Padding(
+                padding: EdgeInsets.only(left: 20, right: 20),
+                child: Container(
+                  // width: screenWidth * 0.8,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: .circular(30),
+                  ),
+                  child: TextField(
+                    autocorrect: true,
+                    controller: searchProductController,
+                    decoration: InputDecoration(
+                      // label: Icon(Icons.search),
+                      hintText: "Search for product",
+                      hintStyle: const TextStyle(color: Colors.black54),
+                      border: OutlineInputBorder(borderRadius: .circular(30)),
+                    ),
+                    onChanged: (value) {
+                      notifier.search(value);
+                    },
+                  ),
+                ),
+              ),
+              SizedBox(height: 10),
               // show the list of product
               Column(
                 children: [

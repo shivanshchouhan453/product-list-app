@@ -70,7 +70,6 @@ class ProductNotifier extends AsyncNotifier<List<Product>> {
 
   // filter the product
   void applyFilters() {
-    print("filtering...");
     List<Product> filteredProduct = allProduct;
 
     // fillter by category
@@ -91,7 +90,6 @@ class ProductNotifier extends AsyncNotifier<List<Product>> {
       }).toList();
     }
 
-    print("filtered data : $filteredProduct");
     state = AsyncData(filteredProduct);
   }
 
