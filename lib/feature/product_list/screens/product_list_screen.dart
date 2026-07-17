@@ -17,6 +17,8 @@ class _ProductListScreenState extends ConsumerState<ProductListScreen> {
     text: "Search the Product",
   );
 
+  final ScrollController _scrollController = ScrollController();
+
   // sample data
   final List<String> _categories = [
     'All',
@@ -33,13 +35,24 @@ class _ProductListScreenState extends ConsumerState<ProductListScreen> {
   String _selectedQuery = "All";
 
   @override
+  void initState() {
+    super.initState();
+    print("loading more..");
+    _scrollController.addListener(() {
+      // when it will reach it to bottom the fetch again more product and append it
+      if (_scrollController.position.pixels >=
+          _scrollController.position.maxScrollExtent - 200) {
+        ref.read(productProvider.notifier).fetchMore();
+      }
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.sizeOf(context).height;
     final screenWidth = MediaQuery.sizeOf(context).width;
 
-    final productAsync = ref.watch(
-      fetchAllProductDetails((limit: 10, skip: 10)),
-    );
+    final productAsync = ref.watch(productProvider);
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -80,96 +93,94 @@ class _ProductListScreenState extends ConsumerState<ProductListScreen> {
             ),
           ],
         ),
-        body: SingleChildScrollView(
-          scrollDirection: .vertical,
-          child: Container(
-            width: screenWidth,
-            height: screenHeight,
-            color: const Color.fromARGB(255, 237, 233, 233),
-            padding: EdgeInsets.only(left: 5, right: 5, bottom: 10, top: 10),
-            child: Column(
-              children: [
-                SizedBox(height: 5),
-                // show the list of product
-                Column(
-                  children: [
-                    SizedBox(
-                      height: 40,
-                      child: ListView.builder(
-                        physics: BouncingScrollPhysics(),
-                        scrollDirection: .horizontal,
-                        itemCount: _categories.length,
+        body: Container(
+          width: screenWidth,
+          height: screenHeight,
+          color: const Color.fromARGB(255, 237, 233, 233),
+          padding: EdgeInsets.only(left: 5, right: 5, top: 10),
+          child: Column(
+            children: [
+              SizedBox(height: 5),
+              // show the list of product
+              Column(
+                children: [
+                  SizedBox(
+                    height: 40,
+                    child: ListView.builder(
+                      physics: BouncingScrollPhysics(),
+                      scrollDirection: .horizontal,
+                      itemCount: _categories.length,
 
-                        itemBuilder: (context, index) {
-                          final category = _categories[index];
-                          bool isSelected = category == _selectedQuery;
-                          return Row(
-                            children: [
-                              InkWell(
-                                onTap: () {
-                                  setState(() {
-                                    _selectedQuery = category;
-                                  });
-                                },
-                                child: Container(
-                                  // width: 100,
-                                  padding: EdgeInsets.all(10),
-                                  decoration: BoxDecoration(
-                                    borderRadius: .circular(20),
-                                    color: isSelected
-                                        ? Colors.blue
-                                        : Colors.white,
-                                  ),
-                                  child: Center(
-                                    child: Text(
-                                      category,
-                                      style: TextStyle(
-                                        color: isSelected
-                                            ? Colors.white
-                                            : Colors.black,
-                                      ),
+                      itemBuilder: (context, index) {
+                        final category = _categories[index];
+                        bool isSelected = category == _selectedQuery;
+                        return Row(
+                          children: [
+                            InkWell(
+                              onTap: () {
+                                setState(() {
+                                  _selectedQuery = category;
+                                });
+                              },
+                              child: Container(
+                                // width: 100,
+                                padding: EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                  borderRadius: .circular(20),
+                                  color: isSelected
+                                      ? Colors.blue
+                                      : Colors.white,
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    category,
+                                    style: TextStyle(
+                                      color: isSelected
+                                          ? Colors.white
+                                          : Colors.black,
                                     ),
                                   ),
                                 ),
                               ),
-                              SizedBox(width: 10),
-                            ],
-                          );
-                        },
-                      ),
+                            ),
+                            SizedBox(width: 10),
+                          ],
+                        );
+                      },
                     ),
-                  ],
-                ),
-                SizedBox(height: 10),
-                Expanded(
-                  child: productAsync.when(
-                    data: (productList) {
-                      return GridView.builder(
-                        // Added padding to the entire list so it breathes nicely against the screen edges
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 3,
-                          vertical: 5,
-                        ),
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          childAspectRatio: 0.66,
-                        ),
-                        itemCount: productList.products.length,
-                        itemBuilder: (context, index) {
-                          final product = productList.products[index];
-
-                          return productCard(product, context);
-                        },
-                      );
-                    },
-                    error: (e, s) => Center(child: Text("Error: $e")),
-                    loading: () =>
-                        const Center(child: CircularProgressIndicator()),
                   ),
+                ],
+              ),
+              SizedBox(height: 10),
+              Expanded(
+                child: productAsync.when(
+                  data: (productList) {
+                    return GridView.builder(
+                      // Added padding to the entire list so it breathes nicely against the screen edges
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 3,
+                        vertical: 5,
+                      ),
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        childAspectRatio: 0.64,
+                      ),
+                      controller: _scrollController,
+                      itemCount: productList.length,
+                      itemBuilder: (context, index) {
+                        final product = productList[index];
+
+                        return productCard(product, context);
+                      },
+                    );
+                  },
+                  error: (e, s) => Center(child: Text("Error: $e")),
+                  loading: () =>
+                      const Center(child: CircularProgressIndicator()),
                 ),
-                SizedBox(height: screenHeight * 0.1),
-              ],
-            ),
+              ),
+              // SizedBox(height: screenHeight * 0.01),
+            ],
           ),
         ),
       ),

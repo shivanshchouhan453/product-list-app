@@ -210,23 +210,49 @@ class _ProductDetailsScreenState extends ConsumerState<ProductDetailsScreen> {
 
                               SizedBox(height: 5),
                               Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(
-                                    "\$${productDetails.price}",
-                                    style: TextStyle(
-                                      fontSize: 29,
-                                      fontWeight: .w500,
-                                      color: Colors.blue,
-                                    ),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        "\$${productDetails.price}",
+                                        style: TextStyle(
+                                          fontSize: 29,
+                                          fontWeight: .w500,
+                                          color: Colors.blue,
+                                        ),
+                                      ),
+                                      SizedBox(width: 15),
+                                      Text(
+                                        "\$${productDetails.discountPercentage}",
+                                        style: TextStyle(
+                                          fontSize: 15,
+                                          fontWeight: .w600,
+                                          color: Colors.grey.shade600,
+                                          decoration:
+                                              TextDecoration.lineThrough,
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                  SizedBox(width: 15),
-                                  Text(
-                                    "\$${productDetails.discountPercentage}",
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: .w600,
-                                      color: Colors.grey.shade600,
-                                      decoration: TextDecoration.lineThrough,
+                                  Container(
+                                    width: 60,
+                                    decoration: BoxDecoration(
+                                      color: Colors.green,
+                                      borderRadius: .circular(10),
+                                    ),
+                                    padding: .only(
+                                      left: 12,
+                                      right: 12,
+                                      top: 7,
+                                      bottom: 7,
+                                    ),
+                                    child: Center(
+                                      child: Text(
+                                        "Buy",
+                                        style: TextStyle(color: Colors.white),
+                                      ),
                                     ),
                                   ),
                                 ],
