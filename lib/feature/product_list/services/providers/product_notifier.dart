@@ -104,4 +104,19 @@ class ProductNotifier extends AsyncNotifier<List<Product>> {
     searchQuery = query;
     applyFilters();
   }
+
+  // refresh product
+  Future<void> refreshProduct() async {
+    skip = 0;
+    hasMore = true;
+    isLoadingMore = true;
+
+    final response = await _repository.fetchAllProductDetails(limit, skip);
+
+    allProduct = response.products;
+
+    skip += limit;
+
+    applyFilters();
+  }
 }

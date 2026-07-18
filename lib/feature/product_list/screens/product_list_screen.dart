@@ -80,122 +80,167 @@ class _ProductListScreenState extends ConsumerState<ProductListScreen> {
             ),
           ],
         ),
-        body: Container(
-          width: screenWidth,
-          height: screenHeight,
-          color: const Color.fromARGB(255, 237, 233, 233),
-          padding: EdgeInsets.only(left: 5, right: 5, top: 10),
-          child: Column(
-            children: [
-              SizedBox(height: 5),
+        body: RefreshIndicator(
+          onRefresh: () async {
+            print("Refreshing...");
+            await notifier.refreshProduct();
+          },
+          child: Container(
+            width: screenWidth,
+            height: screenHeight,
+            color: const Color.fromARGB(255, 237, 233, 233),
+            padding: EdgeInsets.only(left: 5, right: 5, top: 10),
+            child: Column(
+              children: [
+                SizedBox(height: 5),
 
-              Padding(
-                padding: EdgeInsets.only(left: 20, right: 20),
-                child: Container(
-                  // width: screenWidth * 0.8,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: .circular(30),
-                  ),
-                  child: TextField(
-                    autocorrect: true,
-                    controller: searchProductController,
-                    decoration: InputDecoration(
-                      // label: Icon(Icons.search),
-                      hintText: "Search for product",
-                      hintStyle: const TextStyle(color: Colors.black54),
-                      border: OutlineInputBorder(borderRadius: .circular(30)),
+                Padding(
+                  padding: EdgeInsets.only(left: 20, right: 20),
+                  child: Container(
+                    // width: screenWidth * 0.8,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: .circular(30),
                     ),
-                    onChanged: (value) {
-                      notifier.search(value);
-                    },
+                    child: TextField(
+                      autocorrect: true,
+                      controller: searchProductController,
+                      decoration: InputDecoration(
+                        // label: Icon(Icons.search),
+                        hintText: "Search for product",
+                        hintStyle: const TextStyle(color: Colors.black54),
+                        border: OutlineInputBorder(borderRadius: .circular(30)),
+                      ),
+                      onChanged: (value) {
+                        notifier.search(value);
+                      },
+                    ),
                   ),
                 ),
-              ),
-              SizedBox(height: 10),
-              // show the list of product
-              Column(
-                children: [
-                  SizedBox(
-                    height: 40,
-                    child: ListView.builder(
-                      physics: BouncingScrollPhysics(),
-                      scrollDirection: .horizontal,
-                      itemCount: categories.length,
+                SizedBox(height: 10),
+                // show the list of product
+                Column(
+                  children: [
+                    SizedBox(
+                      height: 40,
+                      child: ListView.builder(
+                        physics: BouncingScrollPhysics(),
+                        scrollDirection: .horizontal,
+                        itemCount: categories.length,
 
-                      itemBuilder: (context, index) {
-                        final category = categories[index];
-                        bool isSelected = category == _selectedQuery;
-                        return Row(
-                          children: [
-                            InkWell(
-                              onTap: () {
-                                setState(() {
-                                  _selectedQuery = category;
-                                });
-                                ref
-                                    .read(productProvider.notifier)
-                                    .changeCategory(category);
-                              },
-                              child: Container(
-                                // width: 100,
-                                padding: EdgeInsets.all(10),
-                                decoration: BoxDecoration(
-                                  borderRadius: .circular(20),
-                                  color: isSelected
-                                      ? Colors.blue
-                                      : Colors.white,
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    category,
-                                    style: TextStyle(
-                                      color: isSelected
-                                          ? Colors.white
-                                          : Colors.black,
+                        itemBuilder: (context, index) {
+                          final category = categories[index];
+                          bool isSelected = category == _selectedQuery;
+                          return Row(
+                            children: [
+                              InkWell(
+                                onTap: () {
+                                  setState(() {
+                                    _selectedQuery = category;
+                                  });
+                                  ref
+                                      .read(productProvider.notifier)
+                                      .changeCategory(category);
+                                },
+                                child: Container(
+                                  // width: 100,
+                                  padding: EdgeInsets.all(10),
+                                  decoration: BoxDecoration(
+                                    borderRadius: .circular(20),
+                                    color: isSelected
+                                        ? Colors.blue
+                                        : Colors.white,
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      category,
+                                      style: TextStyle(
+                                        color: isSelected
+                                            ? Colors.white
+                                            : Colors.black,
+                                      ),
                                     ),
                                   ),
                                 ),
                               ),
-                            ),
-                            SizedBox(width: 10),
-                          ],
-                        );
-                      },
+                              SizedBox(width: 10),
+                            ],
+                          );
+                        },
+                      ),
                     ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 10),
-              Expanded(
-                child: productAsync.when(
-                  data: (productList) {
-                    return GridView.builder(
-                      // Added padding to the entire list so it breathes nicely against the screen edges
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 3,
-                        vertical: 5,
-                      ),
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        childAspectRatio: 0.64,
-                      ),
-                      controller: _scrollController,
-                      itemCount: productList.length,
-                      itemBuilder: (context, index) {
-                        final product = productList[index];
-
-                        return productCard(product, context);
-                      },
-                    );
-                  },
-                  error: (e, s) => Center(child: Text("Error: $e")),
-                  loading: () =>
-                      const Center(child: CircularProgressIndicator()),
+                  ],
                 ),
-              ),
-              // SizedBox(height: screenHeight * 0.01),
-            ],
+                SizedBox(height: 10),
+                Expanded(
+                  child: productAsync.when(
+                    data: (productList) {
+                      return GridView.builder(
+                        // Added padding to the entire list so it breathes nicely against the screen edges
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 3,
+                          vertical: 5,
+                        ),
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          childAspectRatio: 0.64,
+                        ),
+                        controller: _scrollController,
+                        itemCount: productList.length,
+                        itemBuilder: (context, index) {
+                          // if (index == productList.length) {
+                          //   return const Center(
+                          //     child: Padding(
+                          //       padding: EdgeInsets.all(16),
+                          //       child: CircularProgressIndicator(),
+                          //     ),
+                          //   );
+                          // }
+                          final product = productList[index];
+
+                          return productCard(product, context);
+                        },
+                      );
+                    },
+                    error: (e, s) => Center(
+                      child: Column(
+                        children: [
+                          Spacer(),
+                          Text("Error: $e"),
+                          ElevatedButton(
+                            onPressed: () async {
+                              try {
+                                await notifier.refreshProduct();
+                                if (context.mounted) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text(
+                                        "Products refreshed successfully.",
+                                      ),
+                                    ),
+                                  );
+                                }
+                              } catch (e) {
+                                if (context.mounted) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(content: Text("Error : $e")),
+                                  );
+                                }
+                              }
+                            },
+                            child: Text("Retry !"),
+                          ),
+                          Spacer(),
+                        ],
+                      ),
+                    ),
+                    loading: () =>
+                        const Center(child: CircularProgressIndicator()),
+                  ),
+                ),
+                // SizedBox(height: screenHeight * 0.01),
+              ],
+            ),
           ),
         ),
       ),
